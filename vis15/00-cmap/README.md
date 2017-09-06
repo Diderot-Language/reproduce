@@ -6,9 +6,9 @@ Running the [`1-gen-cmap.sh`](1-gen-cmap.sh) script with:
 
 should produce:
 
-* `by-cmap.nrrd`, `by-cmap.png`: blue-to-yellow colormap (`.nrrd`), and its image preview:
+* `by-cmap.nrrd`, `by-cmap.png`: blue-to-yellow colormap (`.nrrd`), and its image preview:  
 ![](ref/by-cmap.png "by-cmap.png")
-* `mg-cmap.nrrd`, `mg-cmap.png`: magenta to green colormap and preview:
+* `mg-cmap.nrrd`, `mg-cmap.png`: magenta to green colormap and preview:  
 ![](ref/mg-cmap.png "mg-cmap.png")
 * `cmaps.png`: image preview of both colormaps.
 
