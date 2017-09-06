@@ -13,10 +13,10 @@ The figures are listed here, and below are more details about running
 the scripts. Please ask questions about these instructions, and give feedback,
 in the [diderot-language Google group](https://goo.gl/kXpxhV).
 
-![](00-cmap/ref/cmaps.png "Colormaps image")
+![](00-cmap/ref/cmaps.png "Colormaps image")  
 [(00-cmap) Needed for other figures: colormap generation](00-cmap)
 
-![](01-mousehand/ref/Figure01-sm.png "Figure 1 image")
+![](01-mousehand/ref/Figure01-sm.png "Figure 1 image")  
 [(01-mousehand) Figure 1: 2D image data, field, and isocontours](01-mousehand)
 
 Figure 2: Listing of [`isoptcl.diderot`](01-mousehand/isoptcl.diderot) program for
@@ -28,16 +28,16 @@ Figure 4: Listing of [`volrend.diderot`](volrend.diderot) program for
 volume rendering a scalar field, which is modified (as described in Section 4.1)
 to produce Figures 5, 6, and 7.
 
-![](05-canny/ref/Figure05-sm.png "Figure 5 image")
+![](05-canny/ref/Figure05-sm.png "Figure 5 image")  
 [(05-canny) Figure 5: Volume rendering Canny edges](05-canny)
 
-![](06-vrflow/ref/Figure06-sm.png "Figure 6 image")
+![](06-vrflow/ref/Figure06-sm.png "Figure 6 image")  
 [(06-vrflow) Figure 6: Volume rendering flow properties](06-vrflow)
 
-![](07a-vrstress/ref/Figure07a-sm.png "Figure 7a image")
+![](07a-vrstress/ref/Figure07a-sm.png "Figure 7a image")  
 [(07a-vrstress) Figure 7a: Volume rendering stress tensors](07a-vrstress)
 
-![](07b-vrdti/ref/Figure07b-sm.png "Figure 7b image")
+![](07b-vrdti/ref/Figure07b-sm.png "Figure 7b image")  
 [(07b-vrdti) Figure 7b: Volume rendering diffusion tensors](07b-vrdti)
 
 Figure 8: Listing of [`lic2d.diderot`](10-2dflow/lic2d.diderot) program for
@@ -46,7 +46,7 @@ doing line integral convolution (LIC) in a vector field.
 Figure 9: Listing of [`sline.diderot`](10-2dflow/sline.diderot) program for
 computing streamlines in a vector field.
 
-![](10-2dflow/ref/Figure10-sm.png "Figure 10 image")
+![](10-2dflow/ref/Figure10-sm.png "Figure 10 image")  
 [(10-2dflow) Figure 10: LIC and streamlines in 2D flow](10-2dflow)
 
 (Figure 11: A comparison of parallel speedup on benchmark programs)
