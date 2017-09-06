@@ -1,0 +1,25 @@
+#version 1.0
+field#1(2)[] F = c4hexic ⊛ image("data/hand.nrrd");
+input vec2{} ipos ("initial positions");
+input int stepsMax ("max # steps to take") = 10;
+input real epsilon ("convergence threshold") = 0.0001;
+
+// vvvvvvvvvvvvvvvvvvvvvv BEGIN program copied from VIS'15 paper
+strand isofind (vec2 pos0) {
+  output vec2 x = pos0;
+  int steps = 0;
+  update {
+    // Stop after too many steps or leaving field
+    if (steps > stepsMax || !inside(x, F))
+      die;
+    // one Newton-Raphson iteration
+    vec2 delta = -normalize(∇F(x)) * F(x)/|∇F(x)|;
+    x += delta;
+    if (|delta| < epsilon)
+      stabilize;
+    steps += 1;
+  }
+}
+// ^^^^^^^^^^^^^^^^^^^^^^ END program copied from VIS'15 paper
+
+initially { isofind(ipos{ii}) | ii in 0..length(ipos)-1 };

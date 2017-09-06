@@ -1,0 +1,63 @@
+#version 1.0
+
+input vec3{} LAB ("sequence of 3 LAB coords");
+input bool velo ("if true, output (numerical) derivative of LAB path, instead of colormap") = false;
+input real dstep ("size of discrete differences for computing velocity") = 1;
+input int inum ("number of interpolated points between control points") = 150;
+
+field#0(1)[] warp = bspln3 ⊛ clamp(image("warp.nrrd"));
+
+/* returns vector [a,b,c] such that p(x) = ax^2 + bx + c
+   goes through p[i]=y[i] for i=0,1,2 */
+function vec3 parabCoeff(vec3 y) = [(y[0] - 2*y[1] + y[2])/2,
+                                    (-3*y[0] + 4*y[1] - y[2])/2,
+                                    y[0]];
+vec3 pbL = parabCoeff([LAB{0}[0], LAB{1}[0], LAB{2}[0]]);
+vec3 pbA = parabCoeff([LAB{0}[1], LAB{1}[1], LAB{2}[1]]);
+vec3 pbB = parabCoeff([LAB{0}[2], LAB{1}[2], LAB{2}[2]]);
+function real parab(vec3 abc, real x) = abc[0]*x^2 + abc[1]*x + abc[2];
+
+/* using sRGB primaries (see https://en.wikipedia.org/wiki/SRGB), but
+   NOT including the non-linear (gamma ~2.2) encoding */
+tensor[3,3] XYZtoRGB = [
+   [3.240479, -1.537150, -0.498535],
+   [-0.969256, 1.875992, 0.041556],
+   [0.055648, -0.204043, 1.057311]
+];
+vec3 whiteXYZ = [0.950456, 1, 1.088754];
+
+// https://en.wikipedia.org/wiki/Lab_color_space#Reverse_transformation
+real Ldelta = 6.0/29;
+/* // not needed
+function real Lcbrt(real t) =
+   pow(t,1.0/3) if t > Ldelta^3 else t/(3*Ldelta^2 + 4.0/29);
+*/
+function real Lcubed(real t) =
+   t^3 if t > Ldelta else 3*Ldelta^2*(t - 4.0/29);
+function vec3 LABtoXYZ(vec3 lab) {
+   real L = lab[0]; real A = lab[1]; real B = lab[2];
+   real YnormCbrt = (16 + L)/116;
+   return modulate(whiteXYZ, [Lcubed(YnormCbrt + A/500),
+                              Lcubed(YnormCbrt),
+                              Lcubed(YnormCbrt - B/200)]);
+}
+
+strand cmap(int ii) {
+   output vec3 rgb=[0,0,0];
+   update {
+      if (velo) {
+         real domF = warp(lerp(0, 2, 0, ii+dstep, 2*inum));
+         vec3 labF = [parab(pbL, domF), parab(pbA, domF), parab(pbB, domF)];
+         real domB = warp(lerp(0, 2, 0, ii-dstep, 2*inum));
+         vec3 labB = [parab(pbL, domB), parab(pbA, domB), parab(pbB, domB)];
+         rgb = (labF - labB)/(2*dstep); // not really rgb
+      } else {
+         real dom = warp(lerp(0, 2, 0, ii, 2*inum));
+         vec3 lab = [parab(pbL, dom), parab(pbA, dom), parab(pbB, dom)];
+         rgb = XYZtoRGB•LABtoXYZ(lab);
+      }
+      stabilize;
+   }
+}
+
+initially [ cmap(ii) | ii in 0..2*inum ];

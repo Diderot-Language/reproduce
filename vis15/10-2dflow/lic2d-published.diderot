@@ -1,0 +1,32 @@
+input int sizeX;  input int sizeY; // LIC image size
+input real h0;      // step size of integration
+input int stepNum;  // steps taken up or downstream
+real stdv = sqrt(1.0/stepNum);
+field#1(2)[2] V = bspln3 ⊛ clamp(image("flow.nrrd"));
+field#1(2)[2] nV = normalize(V);
+field#0(2)[] R = tent ⊛ wrap(image("rand.nrrd"));
+field#0(1)[3] cmap = tent ⊛ clamp(image("cmap.nrrd"));
+strand LIC (vec2 x0, real sign) {
+  real h = sign*h0;
+  vec2 x = x0;
+  int step = 0;
+  real sum = R(x0)/2;  // initialize convolution sum
+  output vec3 rgb = [0,0,0];
+  update {
+    x += h*nV(x + 0.5*h*nV(x)); // Midpoint method
+    if (step == stepNum || !inside(x, V))
+      stabilize;
+    sum += R(x);
+    step += 1;
+  }
+  stabilize {
+    sum *= sqrt(|V(x0)|)/stepNum;
+    rgb = cmap(∇×V(x0)) // colormap of vorticity
+           * clamp(0,1, lerp(0,1, -stdv, sum, stdv));
+  }
+}
+initially [ LIC([lerp(0, 6.78, -0.5, xi, sizeX-0.5),
+                 lerp(0, 3.72, -0.5, yi, sizeY-0.5)],
+                 lerp(-1, 1, 0, si, 1))
+            | yi in 0..(sizeY-1), xi in 0..(sizeX-1),
+              si in 0..1 ];

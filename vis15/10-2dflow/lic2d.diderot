@@ -1,0 +1,68 @@
+#version 1.0
+/* This program implements the same method as the lic2d-published.diderot
+   published in Figure 8 of the VIS'15 paper, but with one mathematical fix
+   (for computing stdv), and with more input variables, so that the program
+   can be usefully applied to other datasets as well */
+input int sizeX ("# output samples along X axis");
+input int sizeY ("# output samples along Y axis");
+input vec2 xmm ("min max bounds along X axis");
+input vec2 ymm ("min max bounds along Y axis");
+input real h0 ("step size of integration");
+input int stepNum ("# steps to take up or downstream");
+input real rss ("random noise sample size");
+input real gwin ("size of window of output graylevels, in standard deviations of expected LIC results") = 2;
+input real vortmax ("max expected vector vorticity (for colormapping)");
+input real velomax ("max expected vector velocity (for LIC contrast modulation)");
+input image(2)[2] img ("vector field to visualize");
+
+/* This "stdv" is the basis of setting the contrast in the gray-level LIC
+   output. Consider the mean of N independent samples of Gaussian noise (mean
+   0, standard deviation 1).  Over many such samplings, the standard
+   deviation (stdv) of the mean will be sqrt(1/N). If h0 ~= rss, a streamline
+   with N vertices will tend to get about N independent samples from the
+   underlying noise texture. If h0 < rss, then because of interpolation in
+   the noise texture, there are effectively only about N*h0/rss independent
+   samples.  However, if h0 > rss, the streamline steps are skipping over
+   some noise pixels, but there are still only N independent samples. Thus
+   the number of independent samples from the noise is N*min(1, h0/rss). For
+   the LIC computation done here, the seed point is half-included in the
+   upstream part, and half in the downstream part, hence the "0.5 + " */
+real stdv = sqrt(1/(0.5 + stepNum*min(1, h0/rss)));
+
+field#1(2)[2] V = bspln3 ⊛ clamp(img);
+field#1(2)[2] nV = normalize(V);
+field#0(2)[] R = tent ⊛ wrap(image("rand.nrrd"));
+field#0(1)[3] cmap = tent ⊛ clamp(image("cmap.nrrd"));
+
+strand LIC (vec2 x0, real sign) {
+   real h = sign*h0;
+   vec2 x = x0;
+   int step = 0;
+   real sum = R(x0)/2;  // initialize convolution sum
+   output vec3 rgb = [0,0,0];
+   update {
+      x += h*nV(x + 0.5*h*nV(x)); // Midpoint method
+      if (step == stepNum || !inside(x, V) || !inside(x, R))
+         stabilize;
+      sum += R(x);
+      step += 1;
+   }
+   stabilize {
+      /* the image looks more consistent at the field border (where the
+         streamline may not have had all stepNum steps) if we pretend
+         that all streamlines did all the same length */
+      real avg = sum/(0.5 + stepNum);
+      // output gray remaps avg in [-1,1]*gwin,stdv to [0,1]
+      real gray = lerp(0, 1, -stdv*gwin/2, avg, stdv*gwin/2);
+      // colormap by vorticity
+      rgb = cmap(lerp(-1,1,-vortmax,∇×V(x0),vortmax)) * gray;
+      /* modulate final contrast by sqrt(velocity) at seed point; the
+         sqrt() is just to compress the range of velocities */
+      rgb = lerp([0.5,0.5,0.5], rgb, min(1, sqrt(|V(x0)|/velomax)));
+   }
+}
+initially [ LIC([lerp(xmm[0], xmm[1], -0.5, xi, sizeX-0.5),
+                 lerp(ymm[0], ymm[1], -0.5, yi, sizeY-0.5)],
+                 lerp(-1, 1, 0, si, 1))
+            | yi in 0..(sizeY-1), xi in 0..(sizeX-1),
+              si in 0..1 ];

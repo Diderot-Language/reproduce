@@ -1,0 +1,56 @@
+#version 1.0
+
+input image(2)[] img ("image to look at"); //  = image("data/hand.nrrd");
+field#0(2)[] Ftnt = tent ⊛ img;
+field#0(2)[] Fhex = c4hexic ⊛ img;
+input string what ("how to look at image") = "tent";
+
+input vec2 cent = [0,0];
+input real hght = 2;
+input int size0 = 300;
+input int size1 = 200;
+
+real wdth = hght*size0/size1;
+
+vec2 spc = [wdth/(size0-1), hght/(size1-1)];
+vec2 dir0 = [spc[0], 0.0];
+vec2 dir1 = [0.0, spc[1]];
+vec2 orig = cent - (dir0*(size0-1) + dir1*(size1-1))/2.0;
+
+strand gray(int ui, int vi) {
+   output real bkg = 0;
+   update {
+      if (0 == ui && 0 == vi) {
+         print("NRRD0004\n");
+         print("# Complete NRRD file format specification at:\n");
+         print("# http://teem.sourceforge.net/nrrd/format.html\n");
+         print("type: float\n");
+         print("dimension: 2\n");
+         print("sizes: ", size0, " ", size1, "\n");
+         print("kinds: space space\n");
+         print("endian: little\n");
+         print("encoding: raw\n");
+         print("space dimension: 2\n");
+         print("space directions: (", dir0[0], ",", dir0[1],
+                               ") (", dir1[0], ",", dir1[1], ")\n");
+         print("space origin: (", orig[0], ",", orig[1], ")\n");
+         print("data file: vv.nrrd\n");
+         print("byte skip: -1\n");
+      }
+      vec2 x = orig + ui*dir0 + vi*dir1;
+      if (inside(x, Fhex)) {
+         if ("tent" == what) {
+            bkg = Ftnt(x);
+         } else if ("c4hexic" == what) {
+            bkg = Fhex(x);
+         } else if ("thresh" == what) {
+            bkg = 1 if Ftnt(x) > 0 else 0;
+         } else {
+            print("Don't know about -what \", what, \"\n");
+         }
+      }
+      stabilize;
+   }
+}
+
+initially [ gray(ui, vi) | vi in 0..(size1-1), ui in 0..(size0-1) ];

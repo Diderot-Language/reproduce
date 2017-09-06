@@ -1,0 +1,83 @@
+#version 1.0
+// vvvvvvvvvvvvvvvvvvvvvv BEGIN program copied from Figure 2 of VIS'15 paper (with two modifications noted)
+input real radius;       // particle interaction radius
+input real epsilon;      // convergence criterion
+input int  res;          // initial grid sampling resolution
+input real isoval;       // isovalue
+input real xmin; input real xmax; // sampling extent
+input real ymin; input real ymax;
+real limit = radius/7;   // limit on motion
+field#1(2)[] F = ctmr ⊛ image("hand.nrrd") - isoval;
+// inter-particle energy, and its derivative
+function real  phi(real x) =
+   (1 - |x|/radius)^4 if (|x| < radius) else 0.0;
+function real phi'(real x) =
+  -(4/radius)*(1 - |x|/radius)^3 if |x| < radius else 0.0;
+strand point (vec2 pos0) {
+  output vec2 pos = pos0; // particle position
+  vec2 delta = [0,0];     // change in position
+  bool foundIso = false;  // initial isocontour search done
+  real hh = 1;            // line search step size
+  int iter = 0;           // iteration count
+  update {
+    iter += 1;
+    if (!foundIso) {
+      if (iter > 10 || !inside(pos, F)) // VIS'15 paper had "x", not "pos" (sloppy search & replace)
+        die;
+      // Newton-Raphson
+      delta = -normalize(∇F(pos)) * F(pos)/|∇F(pos)|;
+      pos += delta;
+      if (|delta| < epsilon*radius) {
+        foundIso = true;
+      }
+    } else { // we have foundIso
+      real energy=0;  vec2 force=[0,0];  int ncount = 0;
+      foreach (point P in sphere(radius)) {
+        ncount += 1;
+        vec2 r_ij = pos - P.pos;
+        energy += phi(|r_ij|);
+        force -= normalize(r_ij)*phi'(|r_ij|);
+      }
+      vec2 norm = -normalize(∇F(pos));
+      if (ncount <= 1 && iter % 10 == 0) {
+        vec2 npos = pos + 0.2*radius*[norm[1],-norm[0]];
+        new point(npos);
+      }
+      // project force onto tangent plane
+      force -= norm ⊗ norm • force;
+      if (|force| > 0) { // take gradient descent step
+        delta = hh*force;
+        if (|delta| > limit) { // enforce speed limit
+          hh *= limit/|delta|;
+          delta = hh*force;
+        }
+        vec2 posLast = pos;
+        pos += delta;
+        // take Newton-Raphson steps back to surface
+        pos -= normalize(∇F(pos)) * F(pos)/|∇F(pos)|;
+        pos -= normalize(∇F(pos)) * F(pos)/|∇F(pos)|;
+        delta = pos - posLast; // record change in this iter
+        real energyNew = 0;
+        foreach (point P in sphere(radius))
+          energyNew += phi(|pos - P.pos|);
+        // Line search with backtracking
+        if (energyNew > energy - 0.3*delta•force) {
+          hh *= 0.5; // backtrack
+          pos = posLast;
+        } else {
+          hh *= 1.1; // bigger step next time
+        }
+      }
+    }
+  }
+}
+global{
+  real motion = mean{ |P.delta|/radius | P in point.all };
+  print("motion = ", motion, "\n"); // (progress indication not in VIS'15 paper)
+  if (motion < epsilon)
+    stabilize;
+}
+initially { point([lerp(xmin, xmax, 0, ui, res-1),
+                   lerp(ymin, ymax, 0, vi, res-1)])
+             | vi in 0..(res-1), ui in 0..(res-1) };
+// ^^^^^^^^^^^^^^^^^^^^^^ END program copied from VIS'15 paper

@@ -1,0 +1,32 @@
+#version 1.0
+input image(2)[2] img ("vector field to visualize");
+// vvvvvvvvvvvvvvvvvvvvvv BEGIN program copied from Figure 9 in VIS'15 paper (with 3 NOTEd differences)
+vec2{} x0s = load("seeds.txt"); // list of seedpoints
+input real hh = 0.02;     // NOTE: these three globals weren't "input"s in paper,
+input int stepNum = 200;  // but "-h" means "--help" so renamed h --> hh
+input real arrow = 0.1;   // scale from |V(x)| to arrow size
+field#1(2)[2] V = bspln3 ⊛ clamp(img); // NOTE: paper used a fixed filename
+strand sline(vec2 x0) {
+  int step = 0;
+  vec2 x = x0;
+  output vec2{} p = {x0}; // start streamline at seed
+  update {
+    if (inside(x, V)) {
+      x += hh*V(x + 0.5*hh*V(x));  // Midpoint method
+      p = p @ x;    // append new point to streamline
+    }
+    step += 1;
+    if (step == stepNum) {
+      // finish streamline with triangular arrow head
+      vec2 a = arrow*V(x);    // length of arrow head
+      vec2 b = 0.4*[-a[1],a[0]]; // perpendicular to a
+      p = p@(x-b); p = p@(x+a); p = p@(x+b); p = p@x;
+      stabilize;
+    }
+  }
+}
+initially [ sline(x0s{i}) | i in 0..length(x0s)-1 ];
+/* NOTE: code in paper had "slice(i, x0s{i})"; the mistake was due to
+   GLK's sloppy manual simplification of code actually used for figure,
+   which had that argument as part of earlier debugging */
+// ^^^^^^^^^^^^^^^^^^^^^^ END program copied from VIS'15 paper
