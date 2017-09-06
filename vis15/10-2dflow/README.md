@@ -13,7 +13,7 @@ should produce:
 * (from [`2-lic.sh`](2-lic.sh)) `lic2d.png` 8-bit LIC result from [`lic2d.diderot`](lic2d.diderot)
 * (from [`3-sline.sh`](3-sline.sh)) Computes streamlines with [`sline.diderot`](sline.diderot), and uses
 the stand-alone [`../epsdraw`](../epsdraw.c) utility for drawing paths over an image, to
-make [`Figure10.pdf`](ref/Figure10.pdf). This is rasterized in preview [`Figure10-sm.png`](ref/Figure10-sm.png):
+make [`Figure10.pdf`](ref/Figure10.pdf). This is rasterized in preview [`Figure10-sm.png`](ref/Figure10-sm.png):  
 ![](ref/Figure10-sm.png "Figure 10 image")
 
 The LIC computation is the one case where the published program is not

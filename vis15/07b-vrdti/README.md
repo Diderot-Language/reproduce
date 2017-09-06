@@ -20,5 +20,5 @@ Then this script documents the various steps to estimate a diffusion tensor fiel
 from the DWMRI data, and simulate the brain floating in a tank of water (no skull),
 to simplify later rendering.
 * (from [`2-vr.sh`](2-vr.sh)) Rendering [`Figure07b.png`](ref/Figure07b.png) and low-res preview
-[`Figure07b-sm.png`](ref/Figure07b-sm.png):
+[`Figure07b-sm.png`](ref/Figure07b-sm.png):  
 ![](ref/Figure07b-sm.png "Figure 7b image")

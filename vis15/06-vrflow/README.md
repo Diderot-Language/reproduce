@@ -14,7 +14,7 @@ should produce:
 * (from [`2-vr-all.sh`](2-vr-all.sh)): [`A-flow-MAG.png`](ref/A-flow-MAG.png) [`B-flow-EXT.png`](ref/B-flow-EXT.png) [`C-flow-NHL.png`](ref/C-flow-NHL.png)
 renderings of isosurfaces of flow magnitude, extremal speed, and normalized helicity.
 * (from [`3-arrange.sh`](3-arrange.sh)): all images side-by side [`Figure06.png`](ref/Figure06.png), and low-res preview
-[`Figure06-sm.png`](ref/Figure06-sm.png):
+[`Figure06-sm.png`](ref/Figure06-sm.png):  
 ![](ref/Figure06-sm.png "Figure 6 image")
 
 Be warned that a very small ray step size is needed for part c (normalized helicity), which means
