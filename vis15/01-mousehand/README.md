@@ -16,9 +16,10 @@ representing (respectively) an dataset, a per-pixel operation on it
 (the sort of thing Diderot is not best at), and the field that Diderot
 can reconstruct from the data.
 * (from [`2-isodense.sh`](2-isodense.sh)): [`D-isodense.pdf`](ref/D-isodense.pdf), showing a dense sampling of an isocontour.
-This uses the stand-alone [`../epsdraw`](../epsdraw.c) utility for drawing dots over an image.
-* (from [`3-isoptcl.sh`](3-isoptcl.sh)): [`E-isoptcl.pdf`](ref/E-isoptcl.pdf), showing a uniform sampling of an isocontour
-produced by an interacting particle system
+The Diderot program used is [`isodense.diderot`](isodense.diderot), most of which appeared in Section 3.1 of the paper.
+The results are displayed with the stand-alone [`../epsdraw`](../epsdraw.c) utility for drawing dots over an image.
+* (from [`3-isoptcl.sh`](3-isoptcl.sh)): [`E-isoptcl.pdf`](ref/E-isoptcl.pdf), showing a uniform sampling of an isocontour.
+The Diderot program used is [`isoptcl.diderot`](isoptcl.diderot), which appeared in Figure 2 of the paper.
 * (from [`4-arrange.sh`](4-arrange.sh)): Hi-res summary image [`Figure01.png`](ref/Figure01.png) and low-res
 preview [`Figure01-sm.png`](ref/Figure01-sm.png), which puts the previous results together in a row:
 ![](ref/Figure01-sm.png "Figure 1 image")
