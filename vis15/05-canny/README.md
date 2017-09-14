@@ -26,7 +26,7 @@ linear ramp, a slice of which is shown in [`A-canny-slice.png`](ref/A-canny-slic
 in case that's of any use.
 * (from [`2-vr-iso.sh`](2-vr-iso.sh)) Nine isosurface images [`C-vr-iso-0.png`](ref/C-vr-iso-0.png) through
 [`C-vr-iso-9.png`](ref/C-vr-iso-9.png).
-* (from [`3-vr-canny.sh`](3-vr-canny.sh)) Canny edge rendering [`D-vr-canny.png`)(ref/D-vr-canny.png).
+* (from [`3-vr-canny.sh`](3-vr-canny.sh)) Canny edge rendering [`D-vr-canny.png`](ref/D-vr-canny.png).
 * (from [`4-arrange.sh`](4-arrange.sh)) Combined image [`Figure05.png`](ref/Figure05.png) and smaller preview
 [`Figure05-sm.png`](ref/Figure05-sm.png) and smaller preview:  
 ![](ref/Figure05-sm.png "Figure 5 image")
@@ -36,6 +36,6 @@ This example shows how the program that was printed in the paper,
 different things, as described in Section 4.1 of the paper.
 The program source indicates the small changes from what was published;
 this includes typo fixes, and filename changes.  This is true of other
-programs for other figures: with none or only superficial changes, the
+programs for most other figures: with no or only superficial changes, the
 published programs can be used to regenerate the published figures.
 
