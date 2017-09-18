@@ -40,11 +40,11 @@ to produce Figures 5, 6, and 7.
 ![](07b-vrdti/ref/Figure07b-sm.png "Figure 7b image")  
 [(07b-vrdti) Figure 7b: Volume rendering diffusion tensors](07b-vrdti)
 
-Figure 8: Listing of [`lic2d-printed.diderot`](10-2dflow/lic2d-printed.diderot) program for
-doing line integral convolution (LIC) in a vector field.
+Figure 8: Listing of [`lic2d-published.diderot`](10-2dflow/lic2d-published.diderot) program for
+doing line integral convolution (LIC) in a vector field; see [Figure 10](10-2dflow).
 
 Figure 9: Listing of [`sline.diderot`](10-2dflow/sline.diderot) program for
-computing streamlines in a vector field.
+computing streamlines in a vector field; see [Figure 10](10-2dflow).
 
 ![](10-2dflow/ref/Figure10-sm.png "Figure 10 image")  
 [(10-2dflow) Figure 10: LIC and streamlines in 2D flow](10-2dflow)

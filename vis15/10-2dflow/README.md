@@ -22,6 +22,7 @@ various hard-coded constants, and not enough input variables to be
 useful on anything other than one specific dataset.  Also, its
 computation of the expected standard deviation of the (floating-point) LIC output was
 incomplete. Still, for reference, the printed program is available as
-[`lic2d-published.diderot`](lic2d-published.diderot).  The
+[`lic2d-published.diderot`](lic2d-published.diderot), and the comments therein document
+how it can be used to make a LIC image like the one in the paper.  The
 [`lic2d.diderot`](lic2d.diderot) program here is better tested and
 documented.
