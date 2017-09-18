@@ -1,5 +1,5 @@
 #version 1.0
-// vvvvvvvvvvvvvvvvvvvvvv BEGIN program copied from Figure 2 of VIS'15 paper (with two modifications noted)
+// vvvvvvvvvvvvvvvvvvvvvv BEGIN program copied from Figure 2 of VIS'15 paper (with two modifications NOTEd)
 input real radius;       // particle interaction radius
 input real epsilon;      // convergence criterion
 input int  res;          // initial grid sampling resolution
@@ -22,7 +22,7 @@ strand point (vec2 pos0) {
   update {
     iter += 1;
     if (!foundIso) {
-      if (iter > 10 || !inside(pos, F)) // VIS'15 paper had "x", not "pos" (sloppy search & replace)
+      if (iter > 10 || !inside(pos, F)) // NOTE: VIS'15 paper had "x", not "pos" (sloppy search & replace)
         die;
       // Newton-Raphson
       delta = -normalize(∇F(pos)) * F(pos)/|∇F(pos)|;
@@ -73,7 +73,7 @@ strand point (vec2 pos0) {
 }
 global{
   real motion = mean{ |P.delta|/radius | P in point.all };
-  print("motion = ", motion, "\n"); // (progress indication not in VIS'15 paper)
+  print("motion = ", motion, "\n"); // (NOTE: progress indication not in VIS'15 paper)
   if (motion < epsilon)
     stabilize;
 }
