@@ -84,9 +84,9 @@ GUI-based tools that exploit how Diderot programs can be compiled to
 libraries.
 
 Thus, each figure is made with a fairly low-tech
-sequence of scripts, each starting with an integer (such as the
-`1-dataprep.sh`, `2-vr-iso.sh`, `3-vr-canny.sh`, and `4-cleanup.sh` in
-`05-canny`).  These scripts should be run in sequence (with no
+sequence of scripts, each starting with an integer (such as, in `05-canny`,
+`1-dataprep.sh`, `2-vr-iso.sh`, `3-vr-canny.sh`, and then `4-cleanup.sh`).
+These scripts should be run in sequence (with no
 additional command-line arguments), though the final `N-cleanup.sh` script
 is optional.  All the scripts have detailed
 comments to describe what is going on, as well commentary to explain
