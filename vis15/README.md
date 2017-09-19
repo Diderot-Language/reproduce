@@ -89,7 +89,7 @@ sequence of scripts, each starting with an integer (such as, in `05-canny`,
 These scripts should be run in sequence (with no
 additional command-line arguments), though the final `N-cleanup.sh` script
 is optional.  All the scripts have detailed
-comments to describe what is going on, as well commentary to explain
+comments to describe what is going on, as well as commentary to explain
 the various (generally superficial) differences between what was in
 the paper, and what is generated here.  Some additional commentary
 is within the Diderot programs.  The intended final output of the scripts
