@@ -26,7 +26,8 @@ strand sline(vec2 x0) {
   }
 }
 initially [ sline(x0s{i}) | i in 0..length(x0s)-1 ];
-/* NOTE: code in paper had "slice(i, x0s{i})"; the mistake was due to
-   GLK's sloppy manual simplification of code actually used for figure,
-   which had that argument as part of earlier debugging */
+/* NOTE: code in paper had "sline(i, x0s{i})"; the mistaken addition of
+   the initial "i" argument was due to GLK's sloppy manual simplification
+   of code actually used to make the figure, which did have that argument
+   as part of earlier debugging */
 // ^^^^^^^^^^^^^^^^^^^^^^ END program copied from VIS'15 paper
